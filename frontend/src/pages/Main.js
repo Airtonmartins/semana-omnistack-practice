@@ -22,7 +22,11 @@ export default function Main({ match }) {
     }, [match.params.id]);
 
     async function handlerLike(id){
-        console.log('like', id);
+        await api.post(`/devs/${id}/likes`, null, {
+            headers: { user: match.params.id },
+        })
+
+        setUsers(users.filter(user => user._id != id));
     }
 
     async function handleDislike(id){
