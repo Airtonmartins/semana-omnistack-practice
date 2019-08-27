@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 import api from '../services/api';
@@ -40,10 +41,18 @@ export default function Main({ navigation }) {
 
     }
 
+    async function handleLogout() {
+        await AsyncStorage.clear();
+
+        navigation.navigate('Login');
+    }
+
 
     return (
     <SafeAreaView style={styles.container}>
-        <Image style={styles.logo} source={logo} />
+        <TouchableOpacity onPress={handleLogout}>
+            <Image style={styles.logo} source={logo} />
+        </TouchableOpacity>
 
         <View style={styles.cardsContainer}>
             { users.length === 0 
