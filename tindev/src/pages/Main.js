@@ -24,20 +24,24 @@ export default function Main({ navigation }) {
         loadUsers();
     }, [id]);
 
-    async function handlerLike(id){
-        await api.post(`/devs/${id}/likes`, null, {
+    async function handlerLike(){
+        const [user, ...rest] = users;
+
+        await api.post(`/devs/${user._id}/likes`, null, {
             headers: { user: id },
         })
 
-        setUsers(users.filter(user => user._id != id));
+        setUsers(rest);
     }
 
-    async function handleDislike(id){
-        await api.post(`/devs/${id}/dislikes`, null, {
+    async function handleDislike(){
+        const [user, ...rest] = users;
+
+        await api.post(`/devs/${user._id}/dislikes`, null, {
             headers: { user: id },
         })
 
-        setUsers(users.filter(user => user._id != id));
+        setUsers(rest);
 
     }
 
@@ -70,14 +74,16 @@ export default function Main({ navigation }) {
                 )
             }
         </View>
-        <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.button}>
+        { users.length >  0 && (
+            <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleDislike}>
                 <Image source={dislike} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handlerLike}>
                 <Image source={like} />
             </TouchableOpacity>
         </View>
+        ) }
     </SafeAreaView>
     );
 }
