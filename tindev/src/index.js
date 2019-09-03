@@ -7,6 +7,11 @@
  */
 
 import React from 'react';
+import { YellowBox } from 'react-native';
+
+YellowBox.ignoreWarnings([
+  'Unrecognized WebSocker'
+]);
 
 import Routes from './routes';
 
