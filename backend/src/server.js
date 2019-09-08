@@ -19,9 +19,11 @@ io.on('connection', socket => {
  });
 
 
-mongoose.connect('mongodb+srv://omnistack:omnistack@cluster0-rd4fb.mongodb.net/omnistack8?retryWrites=true&w=majority', {
-    useNewUrlParser: true
-});
+mongoose.connect(
+    'mongodb://mongo/express-mongo', 
+    { useNewUrlParser: true }
+    ).then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log(err));
 
 app.use((req, res, next) => {
     req.io = io;
