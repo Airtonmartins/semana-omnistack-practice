@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  back:
+    build: 
+      context: .
+      target: back
+    volumes:
+      - ./backend:/code
+    ports:
+      - "3333:3333"
