@@ -8,4 +8,4 @@ COPY backend/package.json backend/yarn.lock /code/
 
 RUN yarn install 
 
-CMD ["node", "index.js"]
+CMD ["yarn", "dev"]
