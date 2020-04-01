@@ -6,41 +6,26 @@ import './App.css'
 import './Sidebar.css'
 import './Main.css'
 
+import DevForm from './components/DevForm';
+import DevItem from './components/DevItem';
+
 function App() {
-  const [github_username, setGithubUsername] = useState('');
-  const [techs, setTechs] = useState('');
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  const [devs, setDevs] = useState([]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
+    async function loadDevs() {
+      const response = await api.get('/devs');
+      
+      setDevs(response.data);
+    }
 
-        setLatitude(latitude);
-        setLongitude(longitude);
-      },
-      (err) => {
-        console.log(err);
-      },
-      {
-        timeout: 30000,
-      }
-    )
+    loadDevs();
   }, []);
   
-  async function handleAddDev(e) {
-    e.preventDefault();
+  async function handleAddDev(data) {
+    const response = await api.post('/devs', data);
 
-    const response = await api.post('/devs', {
-      github_username,
-      techs,
-      latitude,
-      longitude,
-    })
-
-    setGithubUsername('');
-    setTechs('');
+    setDevs([...devs, response.data]);
 
   }
 
@@ -48,104 +33,13 @@ function App() {
     <div id="app">
       <aside>
         <strong>Cadastrar</strong>
-        <form onSubmit={handleAddDev}>
-          <div className="input-block">
-            <label htmlFor="github_username">Usuário do Github</label>
-            <input 
-              name="github_username" 
-              id="github_username" 
-              required
-              value={github_username}
-              onChange={e => setGithubUsername(e.target.value)}
-            />
-          </div>
-
-          <div className="input-block">
-            <label htmlFor="techs">Tecnologias</label>
-            <input 
-              name="techs" 
-              id="techs" 
-              required 
-              value={techs}
-              onChange={e => setTechs(e.target.value)}
-            />
-          </div>
-
-          <div className="input-group">
-            <div className="input-block">
-              <label htmlFor="latitude">Latitude</label>
-              <input 
-                name="latitude"
-                type="number"
-                id="latitude" 
-                required 
-                value={latitude} 
-                onChange={e => setLatitude(e.target.value)}
-              />
-            </div>
-
-            <div className="input-block">
-              <label htmlFor="longitude">Longitude</label>
-              <input 
-                name="longitude" 
-                type="number" 
-                id="longitude" 
-                required 
-                value={longitude} 
-                onChange={e => setLongitude(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <button type="submit">Salvar</button>
-        </form>
+          <DevForm onSubmit={handleAddDev}/>
       </aside>
       <main>
         <ul>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/15370827?s=460&u=72c8eff344676cd2b045e57675028a20b46b8a03&v=4" alt="Airtonmartins"></img>
-              <div className="user-info">
-                <strong>Airtonmartins</strong>
-                <span>Python, Docker, Java</span>
-              </div>
-            </header>
-            <p>Pythonista, Javista, Vulgo PaiDokcer e entusiasta da cultura Devops</p>
-            <a href="https://github.com/Airtonmartins">Acessar perfil no GitHub</a> 
-          </li>
-          <li className="dev-item">
-            <header >
-              <img src="https://avatars0.githubusercontent.com/u/15370827?s=460&u=72c8eff344676cd2b045e57675028a20b46b8a03&v=4" alt="Airtonmartins"></img>
-              <div className="user-info">
-                <strong>Airtonmartins</strong>
-                <span>Python, Docker, Java</span>
-              </div>
-            </header>
-            <p>Pythonista, Javista, Vulgo PaiDokcer e entusiasta da cultura Devops</p>
-            <a href="https://github.com/Airtonmartins">Acessar perfil no GitHub</a> 
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/15370827?s=460&u=72c8eff344676cd2b045e57675028a20b46b8a03&v=4" alt="Airtonmartins"></img>
-              <div className="user-info">
-                <strong>Airtonmartins</strong>
-                <span>Python, Docker, Java</span>
-              </div>
-            </header>
-            <p>Pythonista, Javista, Vulgo PaiDokcer e entusiasta da cultura Devops</p>
-            <a href="https://github.com/Airtonmartins">Acessar perfil no GitHub</a> 
-          </li>
-          <li className="dev-item">
-            <header>
-              <img src="https://avatars0.githubusercontent.com/u/15370827?s=460&u=72c8eff344676cd2b045e57675028a20b46b8a03&v=4" alt="Airtonmartins"></img>
-              <div className="user-info">
-                <strong>Airtonmartins</strong>
-                <span>Python, Docker, Java</span>
-              </div>
-            </header>
-            <p>Pythonista, Javista, Vulgo PaiDokcer e entusiasta da cultura Devops</p>
-            <a href="https://github.com/Airtonmartins">Acessar perfil no GitHub</a> 
-          </li>
+          {devs.map(dev => (
+            <DevItem key={dev._id} dev={dev} />
+          ))}
         </ul>
       </main>
     </div>
