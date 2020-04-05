@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import MapView from 'react-native-maps';
+import { StyleSheet, Image, View, Text } from 'react-native';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location'
 
 function Main() {
@@ -35,13 +35,53 @@ function Main() {
         return null;
     }
 
-    return <MapView initialRegion={currentRegion} style={styles.map} />
+    return (
+        <MapView initialRegion={currentRegion} style={styles.map}>
+            <Marker coordinate={{ latitude: -8.0853931, longitude: -34.8906586 }}>
+                <Image style={styles.avatar} source={{ uri : 'https://avatars0.githubusercontent.com/u/15370827?s=460&u=72c8eff344676cd2b045e57675028a20b46b8a03&v=4' }} />
+                <Callout>
+                    <View style={styles.callout}>
+                        <Text style={styles.devName}>Airtonmartins</Text>
+                        <Text style={styles.devBio}>Pythonista, Javista e vulgo PaiDocker, entusiasta da cultura Devops.</Text>
+                        <Text style={styles.devTechs}>Python, Docker, Java</Text>
+                    </View>
+                </Callout>
+            </Marker>
+        </MapView>
+    );
 }
 
 const styles = StyleSheet.create({
     map: {
         flex: 1
     },
+
+    avatar: {
+        width: 54,
+        height: 54,
+        borderRadius: 4,
+        borderWidth: 4,
+        borderColor: '#FFF'
+    },
+
+    callout: {
+        width: 260,
+    },
+
+    devName: {
+        fontWeight: 'bold',
+        fontSize:16,
+    },
+
+    devBio: {
+        color: '#666',
+        marginTop: 5,
+    },
+
+    devTechs: {
+        marginTop: 5,
+    }
+
 })
 
 export default Main;
